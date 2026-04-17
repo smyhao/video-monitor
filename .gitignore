@@ -45,3 +45,6 @@ config.json.bak
 
 ## Prompt files
 prompt.md
+
+## Solution files
+*.sln
