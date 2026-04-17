@@ -1,0 +1,40 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Build output
+build/
+*.zip
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.vspscc
+*.vssscc
+
+## Rider
+.idea/
+
+## .NET
+*.dll
+*.pdb
+*.exe
+*.deps.json
+*.runtimeconfig.json
+
+## NuGet
+**/packages/*
+*.nupkg
+
+## OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+## Config (contains tokens, use config.example.json as template)
+config.json
+config.json.bak

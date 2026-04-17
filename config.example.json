@@ -1,0 +1,33 @@
+{
+  "windowTitle": "配送系统视频监控",
+  "accessToken": "",
+  "accessTokens": {
+    "account1": "",
+    "account2": ""
+  },
+  "window_width": 1280,
+  "window_height": 720,
+  "startFullscreen": false,
+  "screenRatio": 0.85,
+  "devices": [
+    {
+      "tokenKey": "account1",
+      "name": "设备名称1",
+      "deviceSerial": "",
+      "channelNo": "1",
+      "deviceVerifyCode": "",
+      "resolution": "",
+      "streamType": "",
+      "mode": "live",
+      "themeId": "pcLive",
+      "begin": "",
+      "end": ""
+    }
+  ],
+  "rtspDevices": [
+    {
+      "name": "RTSP摄像头",
+      "rtspUrl": "rtsp://host/stream"
+    }
+  ]
+}
