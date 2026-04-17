@@ -10,14 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibVLCSharp.WPF" Version="3.9.7" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\config.json" Condition="Exists('..\config.json')">
+    <Content Include="..\..\config.json" Condition="Exists('..\..\config.json')">
       <Link>config.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

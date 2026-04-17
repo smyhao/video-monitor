@@ -6,6 +6,7 @@
 
 ## Build output
 build/
+dist/
 *.zip
 
 ## Visual Studio
