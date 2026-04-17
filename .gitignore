@@ -19,6 +19,9 @@ build/
 ## Rider
 .idea/
 
+## Claude
+.claude/
+
 ## .NET
 *.dll
 *.pdb

@@ -9,25 +9,49 @@
   "window_height": 720,
   "startFullscreen": false,
   "screenRatio": 0.85,
-  "devices": [
+  "pages": [
     {
-      "tokenKey": "account1",
-      "name": "设备名称1",
-      "deviceSerial": "",
-      "channelNo": "1",
-      "deviceVerifyCode": "",
-      "resolution": "",
-      "streamType": "",
-      "mode": "live",
-      "themeId": "pcLive",
-      "begin": "",
-      "end": ""
-    }
-  ],
-  "rtspDevices": [
+      "name": "一楼仓库",
+      "devices": [
+        {
+          "tokenKey": "account1",
+          "name": "设备名称1",
+          "deviceSerial": "",
+          "channelNo": "1",
+          "deviceVerifyCode": "",
+          "resolution": "",
+          "streamType": "",
+          "mode": "live",
+          "themeId": "pcLive",
+          "begin": "",
+          "end": ""
+        }
+      ],
+      "rtspDevices": [
+        {
+          "name": "RTSP摄像头",
+          "rtspUrl": "rtsp://host/stream"
+        }
+      ]
+    },
     {
-      "name": "RTSP摄像头",
-      "rtspUrl": "rtsp://host/stream"
+      "name": "二楼仓库",
+      "devices": [
+        {
+          "tokenKey": "account2",
+          "name": "设备名称2",
+          "deviceSerial": "",
+          "channelNo": "1",
+          "deviceVerifyCode": "",
+          "resolution": "",
+          "streamType": "",
+          "mode": "live",
+          "themeId": "pcLive",
+          "begin": "",
+          "end": ""
+        }
+      ],
+      "rtspDevices": []
     }
   ]
 }

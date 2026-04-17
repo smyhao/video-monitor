@@ -6,6 +6,7 @@
 
 - **双引擎播放** — 萤石云设备通过 WebView2 播放，RTSP 设备通过 LibVLC 播放
 - **自适应网格布局** — 根据设备数量自动计算 1x1 ~ 4x4 网格
+- **多页监控切换** — 支持将不同设备按地区/场景分组，标题栏下拉切换页面
 - **多账号支持** — 不同设备可绑定不同萤石云账号 token
 - **全屏模式** — 支持 F11 / 双击标题栏 / 按钮切换
 - **直播与回放** — 支持 `live` 实时流和 `rec` 录像回放
@@ -43,7 +44,7 @@ dotnet build -c Release
 
 ## 配置说明
 
-配置文件 `config.json` 放置在运行目录下，主要字段：
+配置文件 `config.json` 放置在运行目录下。推荐使用 `pages` 多页结构：
 
 ```json
 {
@@ -55,24 +56,33 @@ dotnet build -c Release
   },
   "startFullscreen": true,
   "screenRatio": 0.95,
-  "devices": [
+  "pages": [
     {
-      "tokenKey": "account1",
-      "name": "设备名称",
-      "deviceSerial": "BGXXXXXXX",
-      "channelNo": "1",
-      "mode": "live",
-      "themeId": "pcLive"
-    }
-  ],
-  "rtspDevices": [
-    {
-      "name": "RTSP摄像头",
-      "rtspUrl": "rtsp://host/stream"
+      "name": "一楼仓库",
+      "devices": [
+        {
+          "tokenKey": "account1",
+          "name": "设备名称",
+          "deviceSerial": "BGXXXXXXX",
+          "channelNo": "1",
+          "mode": "live",
+          "themeId": "pcLive"
+        }
+      ],
+      "rtspDevices": [
+        {
+          "name": "RTSP摄像头",
+          "rtspUrl": "rtsp://host/stream"
+        }
+      ]
     }
   ]
 }
 ```
+
+### 向后兼容
+
+如果 `pages` 不存在或为空，但保留了旧版的顶层 `devices` / `rtspDevices`，程序会自动将其包装为单页模式，原有行为不变。
 
 | 字段 | 说明 |
 |------|------|
@@ -80,22 +90,23 @@ dotnet build -c Release
 | `accessTokens` | 多账号 token 映射，设备通过 `tokenKey` 引用 |
 | `startFullscreen` | 是否启动即全屏 |
 | `screenRatio` | 窗口占屏幕比例（0.3~1.0） |
-| `devices` | 萤石云设备列表 |
-| `rtspDevices` | RTSP 设备列表 |
+| `pages` | 页面列表，每个页面包含 `name`、`devices`、`rtspDevices` |
+| `devices`（旧）| 萤石云设备列表（向后兼容） |
+| `rtspDevices`（旧）| RTSP 设备列表（向后兼容） |
 
 ## 项目结构
 
 ```
 EzvizPlayer/
 ├── Models/
-│   ├── Config.cs           # 全局配置模型
+│   ├── Config.cs           # 全局配置模型（含 PageConfig）
 │   └── DeviceConfig.cs     # 设备配置模型
 ├── Services/
 │   ├── GridCalculator.cs   # 网格布局计算
 │   └── UrlBuilder.cs       # 萤石云 URL 构建
 ├── App.xaml                # 应用入口 XAML
 ├── App.xaml.cs             # 应用启动，初始化 LibVLCSharp
-├── MainWindow.xaml         # 主窗口 UI（无边框深色主题）
+├── MainWindow.xaml         # 主窗口 UI（无边框深色主题 + 页面切换器）
 ├── MainWindow.xaml.cs      # 核心逻辑
 ├── EzvizPlayer.csproj      # 项目配置与依赖
 └── icon.ico                # 应用图标
@@ -109,13 +120,14 @@ EzvizPlayer/
 
 | 功能 | 说明 |
 |------|------|
-| 配置加载 | 从 `config.json` 读取设备和窗口配置 |
-| 网格布局 | 调用 `GridCalculator` 根据设备数量动态生成行列 |
+| 配置加载 | 从 `config.json` 读取设备和窗口配置，支持新旧两种配置格式 |
+| 多页切换 | 标题栏 ComboBox 切换页面，切换时释放上一页 VLC 资源 |
+| 网格布局 | 调用 `GridCalculator` 根据当前页设备数量动态生成行列 |
 | 视频面板创建 | 为每路设备创建带标题栏的视频面板 |
 | 萤石云播放 | 通过 WebView2 嵌入 `open.ys7.com` H5 播放器 |
 | RTSP 播放 | 通过 LibVLCSharp VideoView 直接播放 RTSP 流 |
 | 全屏切换 | F11 / 双击标题栏 / 按钮，记录并恢复窗口位置 |
-| 刷新视频 | 遍历所有面板，重新加载 WebView2 或重启 VLC 播放 |
+| 刷新视频 | 遍历当前页面所有面板，重新加载 WebView2 或重启 VLC 播放 |
 | 加载/错误状态 | 显示加载动画和错误提示 |
 
 ### Models/Config.cs
@@ -130,8 +142,19 @@ EzvizPlayer/
 | `WindowWidth/Height` | int | 窗口初始尺寸 |
 | `StartFullscreen` | bool | 启动即全屏 |
 | `ScreenRatio` | double | 窗口占屏幕比例 |
-| `Devices` | List | 萤石云设备列表 |
-| `RtspDevices` | List | RTSP 设备列表 |
+| `Pages` | List | 页面列表（推荐） |
+| `Devices` | List | 萤石云设备列表（向后兼容） |
+| `RtspDevices` | List | RTSP 设备列表（向后兼容） |
+
+### Models/PageConfig.cs（Config.cs 内嵌）
+
+页面配置模型：
+
+| 字段 | 说明 |
+|------|------|
+| `Name` | 页面名称，显示在标题栏下拉框中 |
+| `Devices` | 该页面下的萤石云设备列表 |
+| `RtspDevices` | 该页面下的 RTSP 设备列表 |
 
 ### Models/DeviceConfig.cs
 

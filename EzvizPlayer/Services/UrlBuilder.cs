@@ -8,9 +8,12 @@ namespace EzvizPlayer.Services
         public static string BuildUrl(Config config, DeviceConfig dev)
         {
             string accessToken = "";
-            if (!string.IsNullOrWhiteSpace(dev.TokenKey) && config.AccessTokens != null && config.AccessTokens.ContainsKey(dev.TokenKey))
+            if (!string.IsNullOrWhiteSpace(dev.TokenKey)
+                && config.AccessTokens != null
+                && config.AccessTokens.TryGetValue(dev.TokenKey, out var tokenFromMap)
+                && !string.IsNullOrWhiteSpace(tokenFromMap))
             {
-                accessToken = config.AccessTokens[dev.TokenKey];
+                accessToken = tokenFromMap;
             }
             else if (!string.IsNullOrWhiteSpace(config.AccessToken))
             {
@@ -37,7 +40,10 @@ namespace EzvizPlayer.Services
             }
 
             string baseUrl = "https://open.ys7.com/console/jssdk/pc.html";
-            return $"{baseUrl}?accessToken={accessToken}&url={ezopenUrl}&themeId={dev.ThemeId}";
+            string encodedAccessToken = Uri.EscapeDataString(accessToken);
+            string encodedEzopenUrl = Uri.EscapeDataString(ezopenUrl);
+            string encodedThemeId = Uri.EscapeDataString(dev.ThemeId ?? "");
+            return $"{baseUrl}?accessToken={encodedAccessToken}&url={encodedEzopenUrl}&themeId={encodedThemeId}";
         }
     }
 }

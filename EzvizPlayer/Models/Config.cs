@@ -3,6 +3,18 @@ using System.Text.Json.Serialization;
 
 namespace EzvizPlayer.Models
 {
+    public class PageConfig
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+
+        [JsonPropertyName("devices")]
+        public List<DeviceConfig> Devices { get; set; } = new();
+
+        [JsonPropertyName("rtspDevices")]
+        public List<DeviceConfig> RtspDevices { get; set; } = new();
+    }
+
     public class Config
     {
         [JsonPropertyName("windowTitle")]
@@ -31,5 +43,8 @@ namespace EzvizPlayer.Models
 
         [JsonPropertyName("rtspDevices")]
         public List<DeviceConfig> RtspDevices { get; set; } = new();
+
+        [JsonPropertyName("pages")]
+        public List<PageConfig> Pages { get; set; } = new();
     }
 }
