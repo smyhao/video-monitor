@@ -38,3 +38,6 @@ Desktop.ini
 ## Config (contains tokens, use config.example.json as template)
 config.json
 config.json.bak
+
+## Prompt files
+prompt.md
